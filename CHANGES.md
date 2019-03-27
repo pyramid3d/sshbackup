@@ -24,6 +24,11 @@ newest date is on top
 
 -------------------------------------
 
+v1.20.02 | 2019-03-27
+- added instructions in runbackup-android
+- client/posix holds bin/lib
+- symlinks to lib in linux/bin and android/bin
+
 v1.20.01 | 2019-03-26
 - runbackup.inc: commented android version functions
 - runbackup.inc: removed old obsolete code

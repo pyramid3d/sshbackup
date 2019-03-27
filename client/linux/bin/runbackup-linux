@@ -13,7 +13,7 @@
 # setup ssh server and ssh client with passwordless login
 # copy this script and lib directory to your home/bin/ dir
 # edit lib/runbackup.cfg
-# copy runbackup.cron file to /etc/cron.d folder to regualry run the backups
+# copy runbackup.cron file to /etc/cron.d folder to regulary run the backups
 # file content
 #00 02 01 * * backupuser /home/clientuser/bin/runbackup-linux > /home/clientuser/log/runbackup-cron.log
 # restart crond service
