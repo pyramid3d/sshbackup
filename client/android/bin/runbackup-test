@@ -1,0 +1,69 @@
+#! /bin/bash
+# @file: runbackup-test
+# @version: 2019-03-27
+# @created: 2019-03-25
+# @author: pyramid
+# @brief: run backup test for device (Android)
+
+
+#====================================
+# INSTRUCTION
+#====================================
+
+# run this file directly
+
+
+#====================================
+# CONFIG
+#====================================
+
+# source the config file
+. ~/bin/lib/runbackup.cfg
+
+# source the function modules
+. ~/bin/lib/runbackup.inc
+
+
+#====================================
+# MAIN
+#====================================
+
+# standard rsync over ssh backup
+# one file
+SOURCE=~/bin/.bashrc
+TARGET=/transfer/$device/ssh/
+doBackupRsyncSSH $SOURCE $TARGET
+
+# standard rsync over ssh backup
+# full folder example
+#SOURCE=/sdcard/$datadir/transfer
+#TARGET=/transfer/$device/ssh/
+#doBackupRsyncSSH $SOURCE $TARGET
+
+#---
+
+# standard rsync over ssh backup
+# one file
+SOURCE=~/bin/runbackup-test
+TARGET=/transfer/$device/sshand/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+# standard rsync over ssh backup
+# full folder example
+#SOURCE=~/bin/
+#TARGET=/transfer/$device/sshand/
+#doBackupRsyncSSH $SOURCE $TARGET
+
+
+#---
+
+# alternative secure copy
+# one file
+SOURCE=~/
+TARGET=/transfer/$device/scp/
+doBackupSCP $SOURCE $TARGET
+
+
+#====================================
+# EOF
+#====================================

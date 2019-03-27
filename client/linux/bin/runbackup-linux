@@ -1,0 +1,129 @@
+#! /bin/bash
+# @file: runbackup-linux
+# @version: 2019-03-27
+# @created: 2018-05-28
+# @author: pyramid
+# @brief: run backup for device (Linux)
+
+
+#====================================
+# INSTRUCTION
+#====================================
+
+# setup ssh server and ssh client with passwordless login
+# copy this script and lib directory to your home/bin/ dir
+# edit lib/runbackup.cfg
+# copy runbackup.cron file to /etc/cron.d folder to regualry run the backups
+# file content
+#00 02 01 * * backupuser /home/clientuser/bin/runbackup-linux > /home/clientuser/log/runbackup-cron.log
+# restart crond service
+
+
+#====================================
+# CONFIG
+#====================================
+
+# source the configuration
+. ~/bin/lib/runbackup.cfg
+
+# source the function modules
+. ~/bin/lib/runbackup.inc
+
+
+#====================================
+# MAIN
+#====================================
+
+#------------------------------------
+echo "------------------------------"
+echo "--- runbackup v 2019-03-27 ---"
+echoConfig
+echo "------------------------------"
+echoStart
+echo "------------------------------"
+#------------------------------------
+
+
+#====================================
+# Backup Device Storage
+#====================================
+
+#------------------------------------
+
+SOURCE=/$datadir/personal
+TARGET=/
+doBackupRsyncSSH $SOURCE $TARGET
+
+SOURCE=/$datadir/projects
+TARGET=/
+doBackupRsyncSSH $SOURCE $TARGET
+
+SOURCE=/$datadir/install.config
+TARGET=/
+doBackupRsyncSSH $SOURCE $TARGET
+
+SOURCE=/$datadir/photo.album
+TARGET=/
+doBackupRsyncSSH $SOURCE $TARGET
+
+SOURCE=/$datadir/wallpaper
+TARGET=/
+doBackupRsyncSSH $SOURCE $TARGET
+
+SOURCE=/$datadir/machines
+TARGET=/
+doBackupRsyncSSH $SOURCE $TARGET
+
+SOURCE=/$datadir/install.bin
+TARGET=/
+doBackupRsyncSSH $SOURCE $TARGET
+
+SOURCE=/$datadir/transfer
+TARGET=/transfer/$device/
+doBackupRsyncSSH $SOURCE $TARGET
+
+#------------------------------------
+# backup cron.d
+#---
+# (cron.d disbled for android)
+# cron.d local copy
+
+SOURCE=/etc/cron.d/runbackup.cron
+TARGET=/install.config/app.user.data/$platform/$luser/$device/home/etc/cron.d/
+doBackupRsyncSSH $SOURCE $TARGET
+
+
+#------------------------------------
+# backup home folder
+
+# bin to home
+SOURCE=/home/$luser/bin
+TARGET=/install.config/app.user.data/$platform/$luser/$device/home/
+doBackupRsyncSSH $SOURCE $TARGET
+
+SOURCE=/home/$luser/.bash_aliases
+TARGET=/install.config/app.user.data/$platform/$luser/$device/home/
+doBackupRsyncSSH $SOURCE $TARGET
+TARGET=/install.config/configuration/$platform/home/
+doBackupRsyncSSH $SOURCE $TARGET
+
+
+#------------------------------------
+# add more here
+
+
+
+#====================================
+# FINALIZE
+#====================================
+
+#------------------------------------
+echo "------------------------------"
+echoFinish
+echo "------------------------------"
+#------------------------------------
+
+
+#====================================
+# EOF
+#====================================

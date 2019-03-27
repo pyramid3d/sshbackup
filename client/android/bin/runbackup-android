@@ -1,0 +1,168 @@
+#! /bin/bash
+# @file: runbackup-android
+# @version: 2019-03-27
+# @created: 2018-05-28
+# @author: pyramid
+# @brief: run backup for device (Android)
+
+
+#====================================
+# INSTRUCTION
+#====================================
+
+# setup ssh server and ssh client with passwordless login
+# copy this script and lib directory to your home/bin/ dir
+# edit lib/runbackup.cfg
+# execute this script from command line:
+# > runbackup
+
+
+#====================================
+# CONFIG
+#====================================
+
+# source the configuration
+. ~/bin/lib/runbackup.cfg
+
+# source the function modules
+. ~/bin/lib/runbackup.inc
+
+
+#====================================
+# MAIN
+#====================================
+
+#------------------------------------
+echo "------------------------------"
+echo "--- runbackup v 2019-03-27 ---"
+echoConfig
+echo "------------------------------"
+echoStart
+echo "------------------------------"
+#----------------------------------------
+
+
+#====================================
+# Internal Storage
+#====================================
+# backup user data from internal sdcard
+
+#----------------------------------------
+drive=/sdcard
+#----------------------------------------
+
+#---
+# complete data dir
+SOURCE=$drive/$datadir
+TARGET=/install.config/app.user.data/$platform/$luser/$device/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+#---
+# fortunes
+#SOURCE=$drive/Android/data/net.lp.androidsfortune/
+#TARGET=/install.config/app.user.data/$platform/$luser/$device/Android/data/net.lp.androidsfortune/
+#doBackupRsyncSSHAnd $SOURCE $TARGET
+
+#---
+# screenshots
+SOURCE=$drive/Pictures/Screenshots/
+TARGET=/install.config/app.user.data/$platform/$luser/$device/Screenshots/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+#---
+# recorded calls
+SOURCE=$drive/recordedCalls/
+TARGET=/install.config/app.user.data/$platform/$luser/$device/recordedCalls/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+
+#====================================
+# External Storage
+#====================================
+# backup user data from external sdcard
+
+#----------------------------------------
+drive=/storage/external_SD
+#----------------------------------------
+
+#---
+# backup device.id
+SOURCE=$drive/$datadir/device.id.$device.extsd
+TARGET=/install.config/app.user.data/$platform/$luser/$device/data/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+#---
+# camera photos (stock app)
+SOURCE=$drive/DCIM/Camera/
+TARGET=/transfer/$device/Camera/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+#---
+# camera photos (open app)
+SOURCE=$drive/DCIM/OpenCamera/
+TARGET=/transfer/$device/OpenCamera/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+#---
+# osmand
+SOURCE=$drive/Android/obb/net.osmand/favourites.gpx
+TARGET=/install.config/app.user.data/$platform/$luser/$device/net.osmand/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+SOURCE=$drive/Android/obb/net.osmand/avnotes/
+TARGET=/install.config/app.user.data/$platform/$luser/$device/net.osmand/avnotes/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+SOURCE=$drive/Android/obb/net.osmand/tracks/
+TARGET=/install.config/app.user.data/$platform/$luser/$device/net.osmand/tracks/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+#---
+# device backup folder
+SOURCE=$drive/$datadir/backup/
+TARGET=/install.config/app.user.data/$platform/$luser/$device/backup/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+#---
+# binaries
+SOURCE=$drive/$datadir/install.bin/
+TARGET=/install.config/app.user.data/$platform/$luser/$device/install.bin/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+#---
+# config folder
+SOURCE=$drive/$datadir/install.config/
+TARGET=/install.config/app.user.data/$platform/$luser/$device/install.config/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+#---
+# titanium backup
+SOURCE=$drive/Android/data/com.keramidas.TitaniumBackup/
+TARGET=/install.config/app.user.data/$platform/$luser/$device/com.keramidas.TitaniumBackup/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+#---
+# twrp
+SOURCE=$drive/TWRP/
+TARGET=/install.config/app.user.data/$platform/$luser/$device/TWRP/
+doBackupRsyncSSHAnd $SOURCE $TARGET
+
+
+#------------------------------------
+# add more here
+
+
+
+#====================================
+# FINALIZE
+#====================================
+
+#----------------------------------------
+echo "------------------------------"
+echoFinish
+echo "------------------------------"
+#----------------------------------------
+
+#====================================
+# EOF
+#====================================
