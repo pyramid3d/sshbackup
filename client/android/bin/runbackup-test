@@ -1,6 +1,6 @@
 #! /bin/bash
 # @file: runbackup-test
-# @version: 2019-03-27
+# @version: 2019-03-28
 # @created: 2019-03-25
 # @author: pyramid
 # @brief: run backup test for device (Android)
@@ -28,38 +28,51 @@
 # MAIN
 #====================================
 
+
+#------------------------------------
+echo "------------------------------"
+echo "--- runbackup v 2019-03-28 ---"
+echoConfig
+echo "------------------------------"
+echoStart
+echo "------------------------------"
+#------------------------------------
+
+
 # standard rsync over ssh backup
 # one file
-SOURCE=~/bin/.bashrc
+SOURCE=~/.bashrc
 TARGET=/transfer/$device/ssh/
 doBackupRsyncSSH $SOURCE $TARGET
 
 # standard rsync over ssh backup
 # full folder example
-#SOURCE=/sdcard/$datadir/transfer
-#TARGET=/transfer/$device/ssh/
+SOURCE=/sdcard/$datadir/transfer
+TARGET=/transfer/$device/ssh/
 #doBackupRsyncSSH $SOURCE $TARGET
 
 #---
 
-# standard rsync over ssh backup
+# android rsync over ssh backup
 # one file
 SOURCE=~/bin/runbackup-test
 TARGET=/transfer/$device/sshand/
-doBackupRsyncSSHAnd $SOURCE $TARGET
+#doBackupRsyncSSHAnd $SOURCE $TARGET
 
-# standard rsync over ssh backup
+# android rsync over ssh backup
 # full folder example
-#SOURCE=~/bin/
-#TARGET=/transfer/$device/sshand/
-#doBackupRsyncSSH $SOURCE $TARGET
+#SOURCE=~/
+SOURCE=~/bin/
+TARGET=/transfer/$device/sshand/
+#doBackupRsyncSSHAnd $SOURCE $TARGET
 
 
 #---
 
 # alternative secure copy
-# one file
-SOURCE=~/
+# transfers full content without zipping
+# one file example
+SOURCE=~/bin/runbackup-test
 TARGET=/transfer/$device/scp/
 doBackupSCP $SOURCE $TARGET
 

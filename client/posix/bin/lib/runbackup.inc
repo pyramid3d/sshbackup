@@ -1,6 +1,6 @@
 #! /bin/bash
 # @file: runbackup.inc
-# @version: 2019-03-26
+# @version: 2019-03-28
 # @created: 2017-03-29
 # @author: pyramid
 # @brief: runbackup include file with backup functions (Android,Linux)
@@ -12,6 +12,7 @@
 
 #------------------------------------
 echoStart() {
+    mkdir -p $logdir
     echo "sshbackup started $(date +'%Y-%m-%d %T')" > $logdir/runbackup-time.log
     echo "sshbackup started $(date +'%Y-%m-%d %T')"
 }
@@ -69,6 +70,65 @@ doBackupSCP() {
 
 
 #====================================
+# SSH BACKUP LINUX
+#====================================
+
+#------------------------------------
+
+# @brief: create target path on rsync server
+# @param: $1 - target path
+# this is the standard version for posix systems
+# Linux and Android
+# note that the ssh command in rsync *must* be enclosed in
+# double quotes, or the passed port parameter will not
+# be resolved correctly
+createPathRsyncSSH() {
+    #splits=$(echo $TARGET | tr "/" "\n")
+    splits=$(echo $1 | tr "/" "\n")
+    cbpath=''
+
+    for addr in $splits
+    do
+        cbpath="$cbpath/$addr"
+        # - debug ini
+        #echo "[$addr]"
+        #cbpath=$(createPath $cbpath $addr)
+        #echo "path: $cbpath/"
+        # - debug end
+        #echo 'rsync -e "ssh -y -p $sport" /dev/null $suser@$sserver:$sshare/$cbpath/ &> /dev/null'
+        rsync -e "ssh -y -p $sport" /dev/null $suser@$sserver:$sshare/$cbpath/ &> /dev/null
+    done
+}
+
+#------------------------------------
+
+# @brief: execute file transfer to rsync server
+# @param: $1 - source path
+# @param: $2 - target path
+# this is the standard version for posix systems
+# Linux and Android
+# note that the ssh command in rsync *must* be enclosed in
+# double quotes, or the passed port parameter will not
+# be resolved correctly
+backupPathRsyncSSH() {
+    #echo 'rsync --progress -avzzhe "ssh -y -p $sport" $1 $suser@$sserver:$sshare/$2'
+    rsync --progress -avzzhe "ssh -y -p $sport" $1 $suser@$sserver:$sshare/$2
+}
+
+#------------------------------------
+
+# @brief: execute backup of a path to rsync server
+# @param: $1 - source path; $2 - target path
+doBackupRsyncSSH() {
+    echo "--- backing up $1 to $2"
+    createPathRsyncSSH $2
+    backupPathRsyncSSH $1 $2
+}
+
+#------------------------------------
+
+
+#====================================
 # SSH BACKUP ANDROID
 #====================================
 
@@ -84,7 +144,8 @@ doBackupSCP() {
 # we must pass the keyfile in the ssh -i parameter
 # at least this was the case with terminal IDE
 # (com.spartacusrex.spartacuside)
-# also, the rsync command does not support -zz parameters
+# it also seems that there are differences of parameters accepted by the dropbear rsync
+# e.g., the rsync command does not support -zz parameters
 createPathRsyncSSHAnd() {
     #splits=$(echo $TARGET | tr "/" "\n")
     splits=$(echo $1 | tr "/" "\n")
@@ -112,7 +173,8 @@ createPathRsyncSSHAnd() {
 # we must pass the keyfile in the ssh -i parameter
 # at least this was the case with terminal IDE
 # (com.spartacusrex.spartacuside)
-# also, the rsync command does not support -zz parameters
+# it also seems that there are differences of parameters accepted by the dropbear rsync
+# e.g., the rsync command does not support -zz parameters
 backupPathRsyncSSHAnd() {
     #echo 'rsync --progress -avhe "ssh -y -i "$keyfile" -p $sport" $1 $suser@$sserver:$sshare/$2'
     rsync --progress -avhe "ssh -y -i "$keyfile" -p $sport" $1 $suser@$sserver:$sshare/$2
@@ -129,57 +191,6 @@ doBackupRsyncSSHAnd() {
     echo "--- backing up $1 to $2"
     createPathRsyncSSHAnd $2
     backupPathRsyncSSHAnd $1 $2
-}
-
-#------------------------------------
-
-#====================================
-# SSH BACKUP LINUX
-#====================================
-
-#------------------------------------
-
-# @brief: create target path on rsync server
-# @param: $1 - target path
-createPathRsyncSSH() {
-    #splits=$(echo $TARGET | tr "/" "\n")
-    splits=$(echo $1 | tr "/" "\n")
-    cbpath=''
-
-    for addr in $splits
-    do
-        cbpath="$cbpath/$addr"
-        # - debug ini
-        #echo "[$addr]"
-        #cbpath=$(createPath $cbpath $addr)
-        #echo "path: $cbpath/"
-        # - debug end
-        #echo 'rsync -e "ssh -y -p $sport" /dev/null $suser@$sserver:$sshare/$cbpath/ &> /dev/null'
-        rsync -e "ssh -y -p $sport" /dev/null $suser@$sserver:$sshare/$cbpath/ &> /dev/null
-    done
-}
-
-#------------------------------------
-
-# @brief: execute file transfer to rsync server
-# @param: $1 - source path
-# @param: $2 - target path
-# note that the ssh command in rsync *must* be enclosed in
-# double quotes, or the passed port parameter will not
-# be resolved correctly
-backupPathRsyncSSH() {
-    #echo 'rsync --progress -avzzhe "ssh -y -p $sport" $1 $suser@$sserver:$sshare/$2'
-    rsync --progress -avzzhe "ssh -y -p $sport" $1 $suser@$sserver:$sshare/$2
-}
-
-#------------------------------------
-
-# @brief: execute backup of a path to rsync server
-# @param: $1 - source path; $2 - target path
-doBackupRsyncSSH() {
-    echo "--- backing up $1 to $2"
-    createPathRsyncSSH $2
-    backupPathRsyncSSH $1 $2
 }
 
 #------------------------------------
