@@ -1,9 +1,9 @@
 #! /bin/bash
-# @file: runbackup.inc
-# @version: 2019-03-28
+# @file   : runbackup.inc
+# @version: 2019-04-22
 # @created: 2017-03-29
-# @author: pyramid
-# @brief: runbackup include file with backup functions (Android,Linux)
+# @author : pyramid
+# @brief  : runbackup include file with backup functions (Android,Linux)
 
 
 #====================================
@@ -54,7 +54,7 @@ doCopy() {
 # @param: $2 - target path
 doBackupSCP() {
 
-    # replace alias (sinlab > susrsrv)
+    # assign parameters
     SOURCE=$1
     TARGET=$2
 

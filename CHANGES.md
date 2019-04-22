@@ -1,9 +1,9 @@
 ```
-# @file: trunk/CHANGES.md
-# @version: 2019-03-28
+# @file   : trunk/CHANGES.md
+# @version: 2019-04-22
 # @created: 2017-03-29
-# @author: pyramid
-# @brief: version documentation
+# @author : pyramid
+# @brief  : version documentation
 ```
 
 
@@ -26,6 +26,10 @@ history is in inverse chronological order
 newest date is on top
 
 -------------------------------------
+
+v1.30.00 | 2019-04-22
+- windows: added windows version
+- .inc: visually aligned file header 
 
 v1.20.03 | 2019-03-28
 - .inc: better description for SSHAnd functions
